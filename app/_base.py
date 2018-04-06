@@ -48,8 +48,10 @@ def create_app(config_name=None):
 
     from .auth import auth as auth_blueprint
     from .main import main as main_blueprint
+    from .products import api_blueprint as product_api_blueprint
 
     register_blueprints(app, {auth_blueprint: "/auth",
-                              main_blueprint: "/"})
+                              main_blueprint: "/",
+                              product_api_blueprint: "/api/v1"})
 
     return app

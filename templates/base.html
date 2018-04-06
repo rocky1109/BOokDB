@@ -23,6 +23,9 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                {% if current_user.is_admin %}
+                <li><a href="">Add Book</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}

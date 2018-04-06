@@ -1,2 +1,2 @@
 
-from ._base import create_app, db, google_manager
+from ._base import create_app, db, google_manager, AnonymousUser

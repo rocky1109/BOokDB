@@ -1,0 +1,36 @@
+
+<ul class="books">
+    {% for book in books %}
+    <li class="book">
+        <div class="book-thumbnail">
+            <a href="">
+                <img class="img-rounded profile-thumbnail" src="{{ book.picture }}">
+            </a>
+        </div>
+        <div class="book-content">
+            <strong>{{ book.name }}</strong>
+            <div class="book-date">
+                <button class="btn-danger">Rent</button> <br/> <br />
+                <button class="btn-success">Buy</button>
+            </div>
+            <p>Published year: <i>{{ book.published_year }}</i></p>
+
+            <div class="book-body">
+                <i>
+                    {% if book.description %}
+                        {{ book.description | safe }}
+                    {% else %}
+                        {{ book.description }}
+                    {% endif %}
+                </i>
+            </div>
+
+            Authors -
+                {% for author in book.authors %}
+                    <a href="{{ url_for('products.get_author', id=author.id) }}">{{ author.name }}</a>
+                {% endfor %}
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>

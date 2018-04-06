@@ -29,6 +29,8 @@ class Config(GoogleConfig):
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    RESULTS_PER_PAGE = 25
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

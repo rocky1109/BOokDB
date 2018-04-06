@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(length=30))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     modified_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_admin = db.Column(db.Boolean, default=False)
 
     @property
     def full_name(self):
