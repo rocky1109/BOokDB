@@ -50,6 +50,10 @@ class StagingConfig(Config):
     DEBUG = True
 
 
+class HerokuConfig(Config):
+    GOOGLE_LOGIN_REDIRECT_URI = "https://bookdb-stage.herokuapp.com/auth/callback/google"
+
+
 class ConfigDict(UserDict):
     def __init__(self, default_item, *args, **kwargs):
         super(ConfigDict, self).__init__(*args, **kwargs)
@@ -65,5 +69,6 @@ configurations = ConfigDict(
     default_item='default',
     development=DevelopmentConfig,
     stage=StagingConfig,
-    default=DevelopmentConfig
+    default=DevelopmentConfig,
+    heroku=HerokuConfig
 )
