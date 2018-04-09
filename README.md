@@ -1,9 +1,21 @@
 # BOokDB
 
-HerokuApp Url: https://bookdb-stage.herokuapp.com/
+## Heroku
+
+Heroku app Url: https://bookdb-stage.herokuapp.com/
 
 
-How to run:
+## APIs
+
+Books: http://bookdb-stage.herokuapp.com/api/v1/books/ <br />
+Genres: http://bookdb-stage.herokuapp.com/api/v1/genres/ <br />
+Authors: http://bookdb-stage.herokuapp.com/api/v1/authors/ <br />
+Publications: http://bookdb-stage.herokuapp.com/api/v1/publications/ <br />
+Currencies: http://bookdb-stage.herokuapp.com/api/v1/currencies/ <br />
+
+
+
+## How to run:
 
 ```
 >> pip install -r requirements.txt
