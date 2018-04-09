@@ -2,8 +2,9 @@
 import os
 import const
 
-from flask import redirect, url_for, render_template, request, flash
+from flask import redirect, url_for, render_template
 from flask_login import current_user
+from app.utils.decorators import admin_required
 from app import db
 from . import view_blueprint
 from .forms import NewAuthorForm, ManageAuthorForm, \
@@ -14,6 +15,7 @@ from werkzeug.utils import secure_filename
 
 
 @view_blueprint.route('/authors/', methods=['GET', 'POST'])
+@admin_required
 def authors():
     form = NewAuthorForm()
     if form.validate_on_submit():
@@ -29,6 +31,7 @@ def authors():
 
 
 @view_blueprint.route('/authors/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def author(id):
     target_author = Author.query.get_or_404(id)
     form = ManageAuthorForm()
@@ -55,6 +58,7 @@ def author(id):
 
 
 @view_blueprint.route('/publications/', methods=['GET', 'POST'])
+@admin_required
 def publications():
     form = NewPublicationForm()
     if form.validate_on_submit():
@@ -71,6 +75,7 @@ def publications():
 
 
 @view_blueprint.route('/publications/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def publication(id):
     target_publication = Publication.query.get_or_404(id)
     form = ManagePublicationForm()
@@ -97,6 +102,7 @@ def publication(id):
 
 
 @view_blueprint.route('/genres/', methods=['GET', 'POST'])
+@admin_required
 def genres():
     form = NewGenreForm()
     if form.validate_on_submit():
@@ -112,6 +118,7 @@ def genres():
 
 
 @view_blueprint.route('/genres/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def genre(id):
     target_genre = Genre.query.get_or_404(id)
     form = ManageGenreForm()
@@ -137,6 +144,7 @@ def genre(id):
 
 
 @view_blueprint.route('/books/', methods=['GET', 'POST'])
+@admin_required
 def books():
     form = NewBookForm()
     form.authors.choices = [(str(author.id), author.name) for author in Author.query.all()]
@@ -179,6 +187,7 @@ def books():
 
 
 @view_blueprint.route('/books/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def book(id):
     target_book = Book.query.get_or_404(id)
     form = ManageBookForm()

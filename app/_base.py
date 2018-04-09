@@ -14,6 +14,7 @@ db = SQLAlchemy()
 
 class AnonymousUser(AnonymousUserMixin):
     name = "Guest"
+    is_admin = False
 
 
 login_manager = LoginManager()

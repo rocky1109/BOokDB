@@ -1,6 +1,16 @@
 
-from flask import jsonify
+from flask import jsonify, render_template
 import functools
+
+
+def admin_required(func):
+    @functools.wraps(func)
+    def decorated(*args, **kwargs):
+        from flask_login import current_user
+        if current_user.is_admin:
+            return func(*args, **kwargs)
+        return render_template('403.html')
+    return decorated
 
 
 def json_response(f):
