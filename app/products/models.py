@@ -94,7 +94,7 @@ class Currency(db.Model, JsonResponse):
 
     READONLY_FIELDS = ['id']
     REQUIRED_FIELDS = ['name']
-    EDITABLE_FIELDS = ['name', 'symbol']
+    EDITABLE_FIELDS = ['name', 'prefix', 'base_value']
 
     def to_json(self):
         return {
@@ -131,7 +131,7 @@ class Book(db.Model, JsonResponse):
         value = value.lower()
         len_string = len(value)
         for index in range(len_string):
-            if 'z' < value[index] < 'a':
+            if not ('z' >= value[index] >= 'a'):
                 value = value[:index] + "-" + value[index+1:]
         return value
 
@@ -141,8 +141,7 @@ class Book(db.Model, JsonResponse):
 
     @property
     def picture(self):
-        return url_for('static', filename=urljoin('books',
-                                                  '%s.jpg' % self.slug))
+        return url_for('static', filename='books/%s.jpg' % self.slug)
 
     def to_json(self):
         return {
@@ -194,6 +193,7 @@ class Book(db.Model, JsonResponse):
                 raise ValueError("Field '%s' is required")
             setattr(self, key, json_data.get(key))
 
+        # TODO: Handle appropriately for logged in admin user only
         self.added_by = User.query.all()[0].id
 
         return self

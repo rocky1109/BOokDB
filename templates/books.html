@@ -1,17 +1,25 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<div>
+    {% if not target_book %}
+        {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
 
 <ul class="books">
     {% for book in books %}
     <li class="book">
         <div class="book-thumbnail">
-            <a href="">
-                <img class="img-rounded profile-thumbnail" src="{{ book.picture }}" height="70" width="40">
-            </a>
+            <img class="img-rounded profile-thumbnail" src="{{ book.picture }}" height="70" width="40">
         </div>
         <div class="book-content">
             <strong>{{ book.name }}</strong>
             <div class="book-date">
-                <button class="btn btn-danger">Rent</button>
-                <button class="btn btn-success">Buy</button>
+                {% if not target_book or target_book.id != book.id %}
+                <a href="{{ url_for('ui-products.book', id=book.id) }}" class="btn btn-danger">Manage</a>
+                {% endif %}
             </div>
             <p>Published year: <i>{{ book.published_year }}</i></p>
 
@@ -30,7 +38,12 @@
                     <a href="{{ url_for('products.get_author', id=author.id) }}">{{ author.name }}</a>
                 {% endfor %}
 
+            {% if target_book and target_book.id == book.id %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+
         </div>
     </li>
     {% endfor %}
 </ul>
+{% endblock %}

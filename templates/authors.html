@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<div>
+    {% if not target_author %}
+        {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
+
+<ul class="books">
+    {% for author in authors %}
+    <li class="book">
+        <div class="book-content">
+            <strong>{{ author.name }}</strong>
+            <div class="book-date">
+                {% if not target_author or target_author.id != author.id %}
+                <a href="{{ url_for('ui-products.author', id=author.id) }}" class="btn btn-danger">Manage</a>
+                {% endif %}
+            </div>
+            <p>Email: <i>{{ author.email }}</i></p>
+
+            {% if target_author and target_author.id == author.id %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

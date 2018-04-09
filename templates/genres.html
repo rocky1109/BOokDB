@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<div>
+    {% if not target_genre %}
+        {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
+
+<ul class="books">
+    {% for genre in genres %}
+    <li class="book">
+        <div class="book-content">
+            <strong>{{ genre.name }}</strong>
+            <div class="book-date">
+                {% if not target_genre or target_genre.id != genre.id %}
+                <a href="{{ url_for('ui-products.genre', id=genre.id) }}" class="btn btn-danger">Manage</a>
+                {% endif %}
+            </div>
+            <p>Base Price: <i>{{ genre.base_price }}</i></p>
+
+            {% if target_genre and target_genre.id == genre.id %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

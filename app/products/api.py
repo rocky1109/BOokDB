@@ -42,27 +42,7 @@ def get_book(id):
 @api_blueprint.route('/books/', methods=['POST'])
 def new_book():
     book = Book().from_json(request.json)
-    # book.added_by = current_user
-    # import pdb; pdb.set_trace()
-    #
-    # authors = book.authors
-    # book.authors = Book.authors
-    # for author in [Author.query.get(author_id) for author_id in authors]:
-    #     book.authors.append(author)
-    #
-    # genres = book.genres
-    # book.genres = Book.authors
-    # for genre in [Genre.query.get(genre_id) for genre_id in genres]:
-    #     book.genres.append(genre)
-    #
-    # book.publication_id = Publication.query.get(book.publication_id)
-    # book.currency_id = Currency.query.get(book.currency_id)
-
-    try:
-        db.session.add(book)
-    except Exception as err:
-        import pdb; pdb.set_trace()
-        pass
+    db.session.add(book)
     db.session.commit()
     return jsonify(book.to_json()), 201, \
            {'Location': url_for('products.get_book', id=book.id, _external=True)}

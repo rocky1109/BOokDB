@@ -23,11 +23,19 @@ class GoogleConfig:
 
 class Config(GoogleConfig):
     SECRET_KEY = "s3cr3t"
+    SSL_DISABLE = False
     STATIC_DIR = const.STATIC_DIR
     TEMPLATE_DIR = const.TEMPLATE_DIR
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_MAIL_SENDER = 'BOokDB Admin <bookdb@example.com>'
+    MAIL_SUBJECT_PREFIX = '[BOokDB]'
 
     RESULTS_PER_PAGE = 25
 
