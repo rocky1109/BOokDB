@@ -1,1 +1,1 @@
-web: python manage.py runserver --port 33507
+web: python manage.py runserver  --host 0.0.0.0 --port $PORT
