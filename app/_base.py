@@ -40,8 +40,9 @@ def create_app(config_name=None):
     app = Flask(__name__,
                 static_folder=configurations[config_name].STATIC_DIR,
                 template_folder=configurations[config_name].TEMPLATE_DIR)
-    if config_name is None:
-        config_name = os.environ.get('CONFIG')
+    config_env = os.environ.get('IS_HEROKU')
+    if config_env == True or config_env == 'True':
+        config_name = 'heroku'
     app.config.from_object(configurations[config_name])
 
     initialize_apps(flask_app=app, apps=[db,
