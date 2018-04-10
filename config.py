@@ -10,7 +10,7 @@ class GoogleConfig:
                              ".apps.googleusercontent.com"
     GOOGLE_LOGIN_CLIENT_SECRET = "0J4IG_Mr84-xFCIIm_r-xdvQ"
     GOOGLE_LOGIN_SCOPES = ['email']
-    GOOGLE_LOGIN_REDIRECT_URI = "http://localhost:5000/auth/callback/google"
+    GOOGLE_LOGIN_REDIRECT_URI = "https://localhost:5000/auth/callback/google"
     GOOGLE_LOGIN_REDIRECT_SCHEME = "http"
     GOOGLE_ENDPOINTS = dict(
         scope_endpoint="https://www.googleapis.com/auth/userinfo"
@@ -51,7 +51,7 @@ class StagingConfig(Config):
 
 
 class HerokuConfig(Config):
-    GOOGLE_LOGIN_REDIRECT_URI = "http://bookdb-stage.herokuapp.com/auth/callback/google"
+    GOOGLE_LOGIN_REDIRECT_URI = "https://bookdb-stage.herokuapp.com/auth/callback/google"
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(const.DATA_DIR,
                                                           "data-dev.sqlite")
 
