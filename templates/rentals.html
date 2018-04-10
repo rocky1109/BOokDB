@@ -24,7 +24,13 @@
             Return date: {{ rental.return_timestamp if rental.status else "-" }} <br />
 
             {% if ed != None %}
-                No. of days passed: <strong>{{ ed }}</strong> days <br />
+                No. of days passed: <strong>
+                    {% if ed >= 0 %}
+                        {{ ed }}
+                    {% else %}
+                        0
+                    {% endif %}
+                    </strong> day(s) <br />
             {% endif %}
 
             {% if not rental.status %}
