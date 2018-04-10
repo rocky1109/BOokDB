@@ -51,7 +51,7 @@ class StagingConfig(Config):
 
 
 class HerokuConfig(Config):
-    GOOGLE_LOGIN_REDIRECT_URI = "https://bookdb-stage.herokuapp.com/auth/callback/google"
+    GOOGLE_LOGIN_REDIRECT_URI = "http://bookdb-stage.herokuapp.com/auth/callback/google"
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(const.DATA_DIR,
                                                           "data-dev.sqlite")
 

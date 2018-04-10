@@ -35,7 +35,7 @@
 
             Authors -
                 {% for author in book.authors %}
-                    <a href="{{ url_for('products.get_author', id=author.id) }}">{{ author.name }}</a>
+                    <a href="{{ url_for('ui-products.author', id=author.id) }}">{{ author.name }}</a>
                 {% endfor %}
 
             {% if target_book and target_book.id == book.id %}

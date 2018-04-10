@@ -28,10 +28,18 @@
                 <li><a href="{{ url_for('ui-products.genres') }}">Genres</a></li>
                 <li><a href="{{ url_for('ui-products.authors') }}">Authors</a></li>
                 <li><a href="{{ url_for('ui-products.publications') }}">Publishers</a></li>
+                <li><a href="{{ url_for('ui-billings.discounts') }}">Discounts</a></li>
+                <li><a href="{{ url_for('ui-billings.rules') }}">Rules</a></li>
+                <li><a href="{{ url_for('ui-billings.conditions') }}">Conditions</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
+                <li>
+                    <a href="{{ url_for('ui-billings.rentals') }}">Rentals
+                        <span class="badge badge-notify">{{ current_user.no_of_rentals() | length }}</span>
+                    </a>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="{{ current_user.picture }}" height="20" width="20">

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<ul class="books">
+    {% for rental, book, currency, amt, ed in rentals %}
+    <li class="book">
+        <div class="book-thumbnail">
+            <a href="">
+                <img class="img-rounded profile-thumbnail" src="{{ book.picture }}" height="70" width="40">
+            </a>
+        </div>
+        <div class="book-content">
+            <strong>{{ book.name }}</strong>
+            <div class="book-date">
+                {% if not rental.status %}
+                <a href="{{ url_for('ui-products.return_book', id=book.id) }}" class="btn btn-danger">Return</a>
+                {% else %}
+                <a href="{{ url_for('ui-products.rent', id=book.id) }}" class="btn btn-info">Repeat</a>
+                {% endif %}
+            </div>
+
+            <br />
+            Issued date: {{ rental.issue_timestamp }} <br />
+            Return date: {{ rental.return_timestamp if rental.status else "-" }} <br />
+
+            {% if ed != None %}
+                No. of days passed: <strong>{{ ed }}</strong> days <br />
+            {% endif %}
+
+            {% if not rental.status %}
+                Outstanding Amount:
+            {% else %}
+                Paid Amount:
+            {% endif %}
+
+            <strong>{{ amt }} {{ currency.prefix }}</strong> <br />
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

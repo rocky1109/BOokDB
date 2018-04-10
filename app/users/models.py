@@ -1,5 +1,6 @@
 
 from app import db
+from app.billing.models import Rent
 from flask_login import UserMixin
 
 from datetime import datetime
@@ -37,5 +38,12 @@ class User(UserMixin, db.Model):
     def is_active(self):
         return True
 
+    @property
     def is_anonymous(self):
         return False
+
+    def any_notification(self):
+        return Rent.query.filter_by(user_id=self.id, read=False).all()
+
+    def no_of_rentals(self):
+        return Rent.query.filter_by(user_id=self.id, status=False).all()

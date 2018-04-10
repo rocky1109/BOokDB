@@ -2,14 +2,16 @@
 import os
 import const
 
+from datetime import datetime
 from flask import redirect, url_for, render_template
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.utils.decorators import admin_required
+from app.billing.models import Discount, Rent
 from app import db
 from . import view_blueprint
 from .forms import NewAuthorForm, ManageAuthorForm, \
     NewPublicationForm, ManagePublicationForm, NewGenreForm, ManageGenreForm, \
-    NewBookForm, ManageBookForm
+    NewBookForm, ManageBookForm, RentBookForm
 from .models import Author, Publication, Genre, Book, Currency
 from werkzeug.utils import secure_filename
 
@@ -207,13 +209,13 @@ def book(id):
             target_book.description = form.description.data
             target_book.published_year = form.published_year.data
 
-            for author in form.authors.data:
-                target_book.authors.append(Author.query.get(int(author)))
+            target_book.authors = [Author.query.get(int(author))
+                                   for author in form.authors.data]
 
             target_book.publication_id = int(form.publication_id.data)
 
-            for genre in form.genres.data:
-                target_book.genres.append(Genre.query.get(int(genre)))
+            target_book.genres = [Genre.query.get(int(genre))
+                                  for genre in form.genres.data]
 
             target_book.currency_id = int(form.currency_id.data)
 
@@ -233,7 +235,7 @@ def book(id):
     form.published_year.data = target_book.published_year
     form.authors.data = [str(author.id) for author in target_book.authors]
     form.publication_id.data = str(target_book.publication_id)
-    form.genres.data = str([genre.id for genre in target_book.genres])
+    form.genres.data = [str(genre.id) for genre in target_book.genres]
     form.currency_id.data = str(target_book.currency_id)
     form.stock.data = target_book.stock
     form.price.data = target_book.price
@@ -241,3 +243,69 @@ def book(id):
     books = Book.query.all()
     return render_template('books.html', form=form,
                            books=books, target_book=target_book)
+
+
+@view_blueprint.route('/books/<int:id>/rent', methods=['GET', 'POST'])
+@login_required
+def rent(id):
+    form = RentBookForm()
+    book = Book.query.get_or_404(id)
+
+    if form.validate_on_submit():
+        book.stock -= 1
+        rent = Rent()
+        rent.book_id = book.id
+        rent.user_id = current_user.id
+        rent.issue_timestamp = datetime.now()
+        rent.return_timestamp = datetime.now()
+        db.session.add(book)
+        db.session.add(rent)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+
+    discounts = Discount.query.all()
+    target_discounts = list()
+    for discount in discounts:
+        if book in discount.books:
+            applicable_discounts = [item for item in discounts.books
+                                    if item.id == book.id]
+
+            target_discounts.extend(applicable_discounts)
+
+    for discount in discounts:
+        if any([item in discount.genres for item in book.genres]):
+            # applicable_discounts = [item for item in discount
+            #                         if any([v in item.genres
+            #                                 for v in book.genres])]
+
+            target_discounts.append(discount)
+
+    discount_lowest_price = None
+    for val in target_discounts:
+        if discount_lowest_price is None or discount_lowest_price > val.calculate():
+            discount_lowest_price = val.calculate()
+
+    # applied_discounts = [val.name for val in target_discounts]
+
+    return render_template("book_rent.html", book=book, form=form,
+                           applied_discounts=target_discounts,
+                           book_currency=Currency.query.get(book.currency_id),
+                           discount_lowest_price=discount_lowest_price)
+
+
+@view_blueprint.route('/books/<int:id>/return', methods=['GET', 'POST'])
+@login_required
+def return_book(id):
+    book = Book.query.get_or_404(id)
+    rent = Rent.query.filter_by(book_id=book.id, user_id=current_user.id,
+                                status=False).first()
+    if rent is None:
+        return render_template("404.html")
+    book.stock += 1
+    rent.return_timestamp = datetime.now()
+    rent.status = True
+    rent.total = rent.calculate(
+        elapsed_days=(datetime.now() - rent.issue_timestamp).days)
+    db.session.add(book)
+    db.session.add(rent)
+    return redirect(url_for('main.index'))

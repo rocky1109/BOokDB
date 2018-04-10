@@ -1,10 +1,9 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, TextAreaField, SelectField, \
-    SubmitField, SelectMultipleField, IntegerField, FileField
-from wtforms.validators import Required, Length, Email
-from .models import Author, Publication, Genre, Currency
-from wtforms import ValidationError
+    SubmitField, SelectMultipleField, IntegerField, FileField, DateTimeField, DateField
+from wtforms.validators import Required, Length, Email, DataRequired
+from datetime import datetime
 
 
 class NewAuthorForm(FlaskForm):
@@ -80,3 +79,10 @@ class ManageBookForm(FlaskForm):
     edit = SubmitField("Edit")
     delete = SubmitField("Delete")
     cancel = SubmitField("Cancel")
+
+
+class RentBookForm(FlaskForm):
+    issue_date = DateField("Date of Issue", default=datetime.now(),
+                               render_kw={'readonly': True})
+    return_date = DateField("Estd. Return date", validators=[DataRequired()])
+    submit = SubmitField("Issue")

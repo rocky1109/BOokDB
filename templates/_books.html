@@ -10,8 +10,12 @@
         <div class="book-content">
             <strong>{{ book.name }}</strong>
             <div class="book-date">
-                <button class="btn btn-danger">Rent</button>
-                <button class="btn btn-success">Buy</button>
+                {% if not book.is_already_issued() %}
+                <a href="{{ url_for('ui-products.rent', id=book.id) }}" class="btn btn-info">Rent</a>
+                <a class="btn btn-success">Buy</a>
+                {% else %}
+                <a href="{{ url_for('ui-products.return_book', id=book.id) }}" class="btn btn-danger">Return</a>
+                {% endif %}
             </div>
             <p>Published year: <i>{{ book.published_year }}</i></p>
 
@@ -27,7 +31,7 @@
 
             Authors -
                 {% for author in book.authors %}
-                    <a href="{{ url_for('products.get_author', id=author.id) }}">{{ author.name }}</a>
+                    <a href="{{ url_for('ui-products.author', id=author.id) }}">{{ author.name }}</a>
                 {% endfor %}
 
         </div>

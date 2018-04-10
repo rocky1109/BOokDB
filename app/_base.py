@@ -55,10 +55,12 @@ def create_app(config_name=None):
     from .main import main as main_blueprint
     from .products import api_blueprint as product_api_blueprint,\
         view_blueprint as product_view_blueprint
+    from .billing import view_blueprint as bill_view_blueprint
 
     register_blueprints(app, {auth_blueprint: "/auth",
                               main_blueprint: "/",
                               product_api_blueprint: "/api/v1",
-                              product_view_blueprint: "/ui"})
+                              product_view_blueprint: "/ui",
+                              bill_view_blueprint: "/ui"})
 
     return app

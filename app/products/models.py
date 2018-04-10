@@ -1,9 +1,9 @@
 
 from flask import url_for
-from urllib.parse import urljoin
-
+from flask_login import current_user
 from app import db
-from app.users.models import User
+#from app.users.models import User
+from app.billing.models import Rent
 from app.utils.common import JsonResponse
 
 
@@ -143,6 +143,16 @@ class Book(db.Model, JsonResponse):
     def picture(self):
         return url_for('static', filename='books/%s.jpg' % self.slug)
 
+    def is_already_issued(self):
+        if current_user.is_anonymous:
+            return False
+        rents = Rent.query.all()
+        for rent in rents:
+            if rent.book_id == self.id and rent.user_id == current_user.id\
+                    and not rent.status:
+                return True
+        return False
+
     def to_json(self):
         return {
             'url': url_for('products.get_book', id=self.id, _external=True),
@@ -194,6 +204,6 @@ class Book(db.Model, JsonResponse):
             setattr(self, key, json_data.get(key))
 
         # TODO: Handle appropriately for logged in admin user only
-        self.added_by = User.query.all()[0].id
+        #self.added_by = User.query.all()[0].id
 
         return self

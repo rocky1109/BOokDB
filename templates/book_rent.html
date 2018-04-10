@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+
+
+
+        <div class="book-thumbnail">
+            <a href="">
+                <img class="img-rounded profile-thumbnail" src="{{ book.picture }}" height="70" width="40">
+            </a>
+        </div>
+<br/>
+        <div class="book-content">
+            <strong>{{ book.name }}</strong>
+
+            <br />
+
+            <p>Published year: <i>{{ book.published_year }}</i></p>
+
+            <br />
+            <div class="book-body">
+                <i>
+                    {% if book.description %}
+                        {{ book.description | safe }}
+                    {% else %}
+                        {{ book.description }}
+                    {% endif %}
+                </i>
+            </div>
+
+            <br />
+            Authors -
+                {% for author in book.authors %}
+                    <a href="{{ url_for('ui-products.author', id=author.id) }}">{{ author.name }}</a>,
+                {% endfor %}
+
+            <br />
+            Genres -
+                {% for genre in book.genres %}
+                    <a href="{{ url_for('ui-products.genre', id=genre.id) }}">{{ genre.name }}</a>,
+                {% endfor %}
+
+            <br />
+            Discounts Applied:
+            {% for discount in applied_discounts %}
+            {{ discount.name }},
+            {% endfor %}
+
+            <br />
+            Lowest possible price: <strong> {{ discount_lowest_price }} {{ book_currency.prefix }} </strong>
+
+            {% if book.stock > 0 %}
+            <br />
+            Stock: {{ book.stock }} copies
+
+            <br /><br /><br />
+            <div>
+                {{ wtf.quick_form(form) }}
+            </div>
+            {% else %}
+
+            <br /><div><strong>Out of Stock</strong></div> <br /><br />
+            <a href="{{ url_for('main.index') }}" class="btn btn-success">Notify Me!</a>
+            {% endif %}
+
+
+        </div>
+
+{% endblock %}
